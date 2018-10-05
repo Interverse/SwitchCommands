@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Streams;
 using Terraria;
@@ -75,10 +76,16 @@ namespace SwitchCommands {
 
                         if (playerState == PlayerState.None) {
                             if (database.switchCommandList.ContainsKey(pos.ToString())) {
-                                var seconds = (DateTime.Now - player.GetData<DateTime>("Cooldown")).TotalMilliseconds / 1000;
+                                double seconds = 999999;
+
+                                var cooldown = player.GetData<Dictionary<string, DateTime>>("Cooldown");
+
+                                if (cooldown != null && cooldown.ContainsKey(pos.ToString())) {
+                                    seconds = (DateTime.Now - player.GetData<Dictionary<string, DateTime>>("Cooldown")[pos.ToString()]).TotalMilliseconds / 1000;
+                                }
 
                                 if (seconds < database.switchCommandList[pos.ToString()].cooldown) {
-                                    player.SendErrorMessage("You must wait {0} more seconds before using this switch.".SFormat(seconds));
+                                    player.SendErrorMessage("You must wait {0} more seconds before using this switch.".SFormat(database.switchCommandList[pos.ToString()].cooldown - seconds));
                                     return;
                                 }
                                 
@@ -98,8 +105,14 @@ namespace SwitchCommands {
                                         player.Group = currGroup;
                                     }
                                 }
+                                
+                                if (cooldown == null) {
+                                    cooldown = new Dictionary<string, DateTime>() { { pos.ToString(), DateTime.Now } };
+                                } else {
+                                    cooldown[pos.ToString()] = DateTime.Now;
+                                }
 
-                                player.SetData("Cooldown", DateTime.Now);
+                                player.SetData("Cooldown", cooldown);
                             }
                         }
 
