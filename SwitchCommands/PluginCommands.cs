@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,14 @@ namespace SwitchCommands {
 
         public static void RegisterCommands() {
             Commands.ChatCommands.Add(new Command("switchcommands", SwitchCmd, "switch"));
+            Commands.ChatCommands.Add(new Command("switchcommands", SwitchReload, "reload"));
+        }
+
+        private static void SwitchReload(CommandArgs args) {
+            SwitchCommands.database = Database.Read(Database.databasePath);
+            if (!File.Exists(Database.databasePath)) {
+                SwitchCommands.database.Write(Database.databasePath);
+            }
         }
 
         private static void SwitchCmd(CommandArgs args) {
