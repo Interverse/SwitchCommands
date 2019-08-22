@@ -129,7 +129,7 @@ namespace SwitchCommands {
 
             for (int x = response.Count - 1; x >= 0; x--)
                 if (response[x] == "$name")
-                    response[x] = player.Name;
+                    response[x] = "\"" + player.Name + "\"";
 
             return string.Join(" ", response);
         }
