@@ -47,6 +47,7 @@ namespace SwitchCommands {
                         case "add":
                             var command = "/" + string.Join(" ", args.Parameters.Skip(1));
                             cmdInfo.commandList.Add(command);
+                            SwitchCommands.database.Write(Database.databasePath);
                             player.SendSuccessMessage("Added {0}".SFormat(command));
                             break;
 
@@ -67,7 +68,7 @@ namespace SwitchCommands {
 
                             var cmdDeleted = cmdInfo.commandList[commandIndex];
                             cmdInfo.commandList.RemoveAt(commandIndex);
-
+                            SwitchCommands.database.Write(Database.databasePath);
                             player.SendSuccessMessage("Removed {0} at index {1}.".SFormat(cmdDeleted, commandIndex));
                             break;
 
@@ -80,7 +81,7 @@ namespace SwitchCommands {
                             }
 
                             cmdInfo.cooldown = cooldown;
-
+                            SwitchCommands.database.Write(Database.databasePath);
                             player.SendSuccessMessage("Switch cooldown set to {0} seconds.".SFormat(cooldown));
                             break;
 
@@ -93,7 +94,7 @@ namespace SwitchCommands {
                             }
 
                             cmdInfo.ignorePerms = ignorePerms;
-                            
+                            SwitchCommands.database.Write(Database.databasePath);
                             player.SendSuccessMessage("Switch ignoring player perms: {0}.".SFormat(ignorePerms));
                             break;
 
